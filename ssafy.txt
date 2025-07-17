@@ -1,0 +1,4 @@
+리눅스 미로게임
+mkdir a && cd a && mkdir b && cd b && mkdir c && cd c && cd .. && pwd && cd .. && pwd && cd b/c && pwd && cd ~/Desktop/a && pwd
+
+안녕하세요! 조영진입니다!
