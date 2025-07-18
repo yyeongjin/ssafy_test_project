@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>챗봇</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div style="margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <input type="password" id="api-key" placeholder="OpenAI API 키를 입력하세요" style="width:70%;padding:8px;border-radius:4px;border:1px solid #ccc;" />
+                <span style="font-size:12px;color:#888;">API 키는 브라우저에만 저장됩니다.</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="mode-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <span id="ai-face" class="ai-face">😊</span>
+            <div style="flex:1;">
+                <div style="font-size:13px;color:#888;">AI 온도</div>
+                <div id="ai-temp-bar">
+                    <div id="ai-temp" style="width:50%;"></div>
+                </div>
+            </div>
+        </div>
+        <div id="chat-box" class="chat-box"></div>
+        <div style="display:flex;gap:8px;">
+            <input type="text" id="user-input" placeholder="메시지를 입력하세요..." autocomplete="off" />
+            <button id="send-btn" type="button">전송</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
