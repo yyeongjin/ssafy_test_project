@@ -29,10 +29,7 @@
 - 루트 노드가 가장 작은 값을 가진다.
 - 값이 **작은** 데이터가 우선적으로 제거된다.
 
-    <img src="images/image.png" alt="Min Heap" align="left">
-
-<br style="clear:both;">
-<br style="clear:both;">
+![alt text](images/image.png)
 
 - 리스트로 표현하면 `[3, 5, 7, 9, 6]`이다.
 
@@ -64,9 +61,7 @@
 
     print(heap)
     ```
-    <img src="images/image1.png" alt="Min Heap" align="left">
-<br style="clear:both;">
-<br style="clear:both;">
+![alt text](images/image1.png)
 
 - 리스트로 표현하면 `[1, 2, 50, 100, 5]`이다.
 
