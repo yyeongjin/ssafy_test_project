@@ -3,26 +3,26 @@
 ## VM 생성
 
 1. 가상머신 생성을 진행한다。
-![alt text](images/image.png)
+<img src="images/image.png" align="left">
 
 2. 데비안 리눅스 기반 ISO 이미지를 선택한다.
-![alt text](images/image-1.png)
+<img src="images/image-1.png" align="left">
 
 3. nextcloud 서버로 이름을 정의한다.
-![alt text](images/image-2.png)
+<img src="images/image-2.png" align="left">
 
 4. 200기가를 할당해준다.
-![alt text](images/image-3.png)
+<img src="images/image-3.png" align="left">
 
 5. 브리지모드 선택 후 VM에 접속한다.
 
 
 ## VM 초기 세팅
 1. 설치할때 Graphical install을 선택한다.
-![alt text](images/image-4.png)
+<img src="images/image-4.png" align="left">
 
 2. 언어는 영어를 선택한다.
-![alt text](images/image-5.png)
+<img src="images/image-5.png" align="left">
 
 3. location을 설정해준다.
 ![alt text](images/image-6.png)
