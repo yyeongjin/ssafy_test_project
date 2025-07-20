@@ -1,3 +1,8 @@
+# vibe_coding
+![alt text](images/image.png)
+![alt text](images/image1.png)
+
+
 # Generative AI
 
 Generative AI는 기존의 패턴을 기반으로 다양한 콘텐츠를 생성하는 인공지능 모델로, 오디오, 비디오, 이미지, 텍스트, 코드, 시뮬레이션 등 여러 형태의 새로운 데이터를 창출한다.
