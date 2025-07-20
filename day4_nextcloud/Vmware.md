@@ -272,6 +272,7 @@ vim /etc/ssh/sshd_config
 mkdir -p /home/nextcloud
 mkdir -p /home/nextcloud-data
 ln -s /home/nextcloud /var/www/nextcloud
+ln -s /home/nextcloud-data /var/www/nextcloud-data
 chown -R www-data:www-data /home/nextcloud /home/nextcloud-data
 chmod -R 755 /home/nextcloud /home/nextcloud-data
 ```
