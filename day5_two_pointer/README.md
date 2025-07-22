@@ -84,3 +84,32 @@ for h in range(n):
 시간이 너무 늦은 관계로 ,투포인트 알고리즘을 활용하여, 문제풀이까지만 진행하였다.
 start += 1, end -= 1은 거의 브루트포스와 유사하게 비효율적으로 코드를 처리하여,
 개선이 필요할 것 같다.
+
+
+## + 2025-07-22
+나는 결국 투포인터 알고리즘이 아닌, for문을 최적화하여 문제를 해결하였다.
+```python
+max = 1000000
+is_prime = [True] *(max+1)
+is_prime[0] = is_prime[1] = False
+
+for i in range(2, int(max**0.5)+1):
+    if is_prime[i]:
+        for j in range(i*i, max+1, i):
+            is_prime[j] = False
+
+
+n = int(input())
+for h in range(n):
+    a = int(input())
+    cnt = 0
+    for j in range(2, (a//2)+1):
+        if is_prime[j] and is_prime[a - j]:
+            cnt += 1
+    print(cnt)
+```
+for문으로 인해, 시간초과가 발생하여, 절반으로 줄여보았다.
+
+결과값 = (결과값-차감수) + 차감수 = 참이되어,
+
+이러한 방식으로 풀이를 진행하였다.
