@@ -49,7 +49,7 @@ for h in range(n):
 5. 모든 경우의 수 확인이 다 될때까지 리스트 길이만큼 반복
 
 - 그림판을 활용하여 공부한 내용은 아래와 같다.
-![alt text](image.png)
+![alt text](images/image.png)
 
 
 개선된 코드 -> 시간초과로 인한 추가 개선 필요
