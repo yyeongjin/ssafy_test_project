@@ -1,0 +1,151 @@
+name: Gemini 문제 풀이 코드 리뷰
+
+on:
+  push:
+    paths:
+      - '**/백준/**.py'
+      - '**/swea/**.py'
+      - '**/프로그래머스/**.py'
+
+permissions:
+  contents: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    environment: GEMINI_API_KEY
+
+    steps:
+      - name: 📦 저장소 체크아웃
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: 🔢 최근 파일 확인
+        run: |
+          echo "🔍 유효한 디렉토리에서 최신 Python 파일 찾는 중..."
+
+          SEARCH_DIRS=""
+          for d in 백준 swea 프로그래머스; do
+            if [ -d "$d" ]; then
+              SEARCH_DIRS="$SEARCH_DIRS $d"
+            fi
+          done
+
+          if [ -z "$SEARCH_DIRS" ]; then
+            echo "❌ 검색할 디렉토리가 없습니다. 종료합니다."
+            exit 0
+          fi
+
+          FILE=$(find $SEARCH_DIRS -name "*.py" -type f -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2-)
+          echo "✅ 최신 Python 파일: $FILE"
+
+          echo "FILE_PATH=$FILE" >> $GITHUB_ENV
+
+      - name: 🤖 Gemini에서 파일 분석 & 리포트 저장
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FILE_PATH: ${{ env.FILE_PATH }}
+        run: |
+          set -e
+
+          if [ -z "$FILE_PATH" ]; then
+            echo "❌ 처리할 파일이 없습니다."
+            exit 0
+          fi
+
+          CONTENT=$(cat "$FILE_PATH")
+          if [ -z "$CONTENT" ]; then
+            echo "❌ 파일 내용이 비어 있음 → 종료"
+            exit 0
+          fi
+
+          FILENAME=$(basename "$FILE_PATH")
+          PLATFORM=$(basename $(dirname "$FILE_PATH"))
+          PROBLEM_ID="${FILENAME%.py}"
+
+          PROMPT="문제: $PLATFORM ${PROBLEM_ID}번\n\n"
+          PROMPT+=$(cat <<'EOF'
+          다음은 Python 알고리즘 코드입니다.
+          
+          이 코드를 절대 수정하지 말고, 아래 기준에 따라 **40점 만점**으로 정밀하게 평가해주세요:
+          
+          1. 알고리즘 선택 적합성 (20점)
+             - 문제 유형에 맞는 알고리즘을 선택했는가? (1점씩 5항목)
+               - 문제 조건과 맞는 탐색/정렬/DP 등인지?
+               - 과한 알고리즘을 사용하지 않았는가?
+               - 직관적인 구조를 갖췄는가?
+               - 불필요한 로직이 없는가?
+               - 자료구조 선택이 적절했는가?
+          
+          2. 시간복잡도 최적화 여부 (20점)
+             - 시간복잡도 개선이 고려되었는가? (1점씩 5항목)
+               - 불필요한 반복/중복 계산 제거?
+               - 입출력 병목 처리?
+               - 정렬/탐색 최적화 여부?
+               - 최악 케이스 대응 구조?
+               - 이론적 시간복잡도 분석 가능?
+          
+          ---
+          
+          **필수 포함 항목**:
+          
+          - 입력 케이스 N의 범위를 기준으로 예상 시간복잡도 O(...) 분석
+          - 최대 입력 기준 예상 실행 시간 (ex: 약 0.25초)
+          - 최대 입력 기준 예상 메모리 사용량 (ex: 40MB)
+          - 현 구조로 어디까지 개선 가능한지 추정 (단, 개선 코드 제안은 금지)
+          
+          **제약**:
+          - 코드 수정 및 개선 코드 제안 금지
+          - 마크다운 형식으로 출력
+          - 각 항목마다 점수와 설명 작성 (1점 단위)
+          - 마지막에 총점 및 총평 포함
+          
+          ---
+          
+          Python 코드:
+          EOF
+          )
+
+          PROMPT="$PROMPT\n$CONTENT"
+
+          JSON_PAYLOAD=$(jq -n --arg content "$PROMPT" '{
+            contents: [
+              {
+                role: "user",
+                parts: [{ text: $content }]
+              }
+            ]
+          }')
+
+          RESPONSE=$(curl -s \
+            -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d "$JSON_PAYLOAD")
+
+          REVIEW=$(echo "$RESPONSE" | jq -r '.candidates[0].content.parts[0].text // empty')
+
+          if [ -z "$REVIEW" ]; then
+            echo "❌ Gemini 응답 없음 → 종료"
+            exit 0
+          fi
+
+          DIR=$(dirname "$FILE_PATH")
+          REPORT_DIR="$DIR/AI report"
+          mkdir -p "$REPORT_DIR"
+
+          TIMESTAMP=$(date "+%Y%m%d-%H%M%S")
+          REVIEW_FILE="$REPORT_DIR/${{ github.actor }}-$TIMESTAMP.md"
+
+          echo "$REVIEW" > "$REVIEW_FILE"
+          echo "✅ 리뷰 저장 완료: $REVIEW_FILE"
+
+      - name: ✅ 리뷰 결과 커밋 & 푸시
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          FILE=$(find . -name "${{ github.actor }}-*.md" | tail -n 1)
+          git add "$FILE"
+          git commit -m "💬 Gemini 리뷰 자동 생성: $FILE" || echo "⚠️ 커밋할 변경 사항 없음"
+          git push || echo "❌ push 실패"
