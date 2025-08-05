@@ -13,7 +13,6 @@
 ## 내가 작성한 코드
 
 ```python
-from collections import defaultdict
 tc = int(input())
 for h in range(1, tc+1):
     q,w,e = map(int, input().split())
