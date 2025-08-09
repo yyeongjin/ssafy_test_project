@@ -95,7 +95,7 @@ def dfs(i):
             continue                                                    # 건너 뛰기
         col[j] = diag_lst[diag] = r_diag_lst[r_diag] = True             # 방문 체크
         dfs(i+1)
-        col[j] = diag_lst[diag] = r_diag_lst[r_diag] = False            # 가지치기
+        col[j] = diag_lst[diag] = r_diag_lst[r_diag] = False            # 백트래킹 복구
 
 dfs(0)
 print(cnt)
