@@ -5,24 +5,32 @@
 # 가상환경 생성 및 활성화
 python -m venv venv
 source venv/Scripts/activate
+```
 
 # 프로젝트 및 앱 생성
+```bash
 django-admin startproject demo_first .
 python manage.py startapp demo_app
+```
 
 # 서버 실행
+```bash
 python manage.py runserver
+```
 
 # DB 마이그레이션
+```bash
 python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
+```
 
 # shell_plus 실행 및 ORM 테스트
+```bash
 python manage.py shell_plus
 demo_model.objects.all()
 demo_model.objects.create(num=1, destination="test")
-
+```
 
 ## 이론 요약
 
