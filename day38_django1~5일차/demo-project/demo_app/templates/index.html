@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+{% for value in num %}
+<a href="{{ value.id }}">{{ value.id }}</a>
+<br>
+{% endfor %}
+  <br>
+  <form action="{% url 'demo_app:create' %}" method="POST">
+    {% csrf_token %}
+    <label for="num">num : </label>
+    <input type="text" id="num" name="num">
+    <br>
+    <label for="content">destination: </label>
+    <input type="text" id="destination" name="destination">
+    <br>
+    <button type="submit">제출</button> </form> 
+{% endblock content %}
+
