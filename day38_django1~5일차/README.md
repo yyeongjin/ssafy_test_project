@@ -22,7 +22,7 @@ python manage.py runserver
 ```bash
 python manage.py makemigrations
 python manage.py migrate
-python manage.py createsuperuser
+python manage.py createsuperuser # admin 유저 생성
 ```
 
 # shell_plus 실행 및 ORM 테스트
